@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Medal As A Service</title>
+  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <style type="text/css">
+    ::-webkit-input-placeholder {
+      text-align: center;
+    }
+
+    ::-moz-placeholder {
+      text-align: center;
+    }
+
+    :-ms-input-placeholder {
+      text-align: center;
+    }
+
+    :-moz-placeholder {
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container-fluid">
+    <div class="row mt-4">
+      <div class="col-12 text-center">
+        <h1 class="text-center" style="color: rgb(215, 0, 0); text-shadow: rgb(230, 200, 120) 5px 5px 5px;">MaaS</h1>
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-12 text-center">
+        <canvas id="medalCanvas" width="300" height="417" style="width: 300px; height: 417px;">
+        </canvas>
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-10 offset-1 col-sm-8 offset-sm-2 col-md-6 offset-md-3">
+        <input type="text" class="form-control" id="textInput" placeholder="Texte de prestige" style="text-align: center;">
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-12 text-center">
+        <a id="downloadButton" class="btn btn-outline-primary">🏅 Décerner 🏅</a>
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-12 text-center">
+        <p>Made with ❤ rue de Charonne</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const canvas = document.getElementById('medalCanvas');
+      const ctx = canvas.getContext("2d");
+
+      const [w, h] = [300, 417];
+      const image = new Image();
+      image.src = './medal.png';
+
+      ctx.textAlign = 'center';
+      ctx.strokeStyle = 'rgb(83, 33, 0)';
+      ctx.fillStyle = 'rgb(83, 33, 0)';
+      ctx.textBaseline = 'middle';
+      const textMaxWidth = 170;
+
+      const getTextWidth = text => ctx.measureText(text).width;
+      const setTextSize = textSize => ctx.font = textSize + 'px sans-serif';
+
+      const draw = evt => {
+        ctx.clearRect(0, 0, 300, 417);
+        ctx.drawImage(image, 0, 0);
+
+        const text = evt.target.value || "";
+
+        let textSize = 80;
+        setTextSize(textSize);
+        let width = getTextWidth(text);
+
+        while (width > textMaxWidth) {
+          textSize--;
+          setTextSize(textSize);
+          width = getTextWidth(text);
+        }
+
+        ctx.fillText(text, 150, 130, textMaxWidth);
+      }
+
+      const inputElt = document.getElementById('textInput');
+      inputElt.oninput = draw;
+      image.onload = draw;
+
+      const downloadButton = document.getElementById('downloadButton');
+      downloadButton.addEventListener('click', function () {
+        downloadButton.href = canvas.toDataURL();
+        downloadButton.download = 'medal.png';
+      }, false);
+    })();
+  </script>
+</body>
+
+</html>
